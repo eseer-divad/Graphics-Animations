@@ -1,5 +1,10 @@
+// David Reese, for Dr. Xiao's Computer Graphics, Assignment #1
+// Mostly built this with a ton of cylinders, but added a box and cone
+// to satisfy basic assignment requirements.
+
 #include "colors.inc"
 #include "textures.inc"
+#include "screen.inc"
 
 camera {
     location <-4.0, 14.0, 9.0>
@@ -22,9 +27,18 @@ light_source
 
 light_source 
 { 
-    <5, 25.0, 25.0>, 
+    <5, 15.0, 25.0>, 
     color Pink 
 }
+background { color rgb <0.1,0.1,0.1> }
+
+box 
+    {
+        <100,100,-1000>,
+        <-100,-100, -800>
+        
+        texture { Glass2 }
+    }
 
     // arm
     cylinder 
@@ -80,9 +94,10 @@ light_source
     
     
     // hands center
-    cylinder 
+    cone 
     {
         <0,0,0>,
+        0.0,
         <0,0,10.811>,
         0.3
         rotate <45, 60, 170> 
@@ -95,7 +110,7 @@ light_source
     cylinder 
     {
         <0,0,10.811>,
-        <2.2*cos(120.2),2.2*sin(120.2),10.811>,
+        <2.2*cos(120.8),2.2*sin(120.8),10.811>,
         0.07
         rotate <45, 60, 170>
         //rotate <1, 1, 0> 
@@ -352,7 +367,7 @@ cylinder
     cylinder 
     {
         <0,0,10.811>,
-        <2.2*cos(120.2),2.2*sin(120.2),10.811>,
+        <2.2*cos(120.8),2.2*sin(120.8),10.811>,
         0.07
         rotate <55, 60, 170>
         //rotate <1, 1, 0> 
@@ -609,7 +624,7 @@ cylinder
     cylinder 
     {
         <0,0,10.811>,
-        <2.2*cos(120.2),2.2*sin(120.2),10.811>,
+        <2.2*cos(120.8),2.2*sin(120.8),10.811>,
         0.07
         rotate <52, 70, 220>
         translate<20,5,4> 
@@ -847,7 +862,7 @@ cylinder
     cylinder 
     {
         <0,0,10.811>,
-        <2.2*cos(120.2),2.2*sin(120.2),10.811>,
+        <2.2*cos(120.8),2.2*sin(120.8),10.811>,
         0.07
         rotate <-20, 90, 5>
         translate<-25,5,4> 
@@ -1084,7 +1099,7 @@ cylinder
     cylinder 
     {
         <0,0,10.811>,
-        <2.2*cos(120.2),2.2*sin(120.2),10.811>,
+        <2.2*cos(120.8),2.2*sin(120.8),10.811>,
         0.07
         rotate <-20, 90, 5>
         translate<-40,-15,-2> 
@@ -1322,7 +1337,7 @@ cylinder
     cylinder 
     {
         <0,0,10.811>,
-        <2.2*cos(120.2),2.2*sin(120.2),10.811>,
+        <2.2*cos(120.8),2.2*sin(120.8),10.811>,
         0.07
         rotate <-20, 70, 65>
         translate<-10,-6,6> 
@@ -1559,7 +1574,7 @@ cylinder
     cylinder 
     {
         <0,0,10.811>,
-        <2.2*cos(120.2),2.2*sin(120.2),10.811>,
+        <2.2*cos(120.8),2.2*sin(120.8),10.811>,
         0.07
         rotate <-20, 70, 65>
         translate<-15,-7.1,-1> 
@@ -1796,7 +1811,7 @@ cylinder
     cylinder 
     {
         <0,0,10.811>,
-        <2.2*cos(120.2),2.2*sin(120.2),10.811>,
+        <2.2*cos(120.8),2.2*sin(120.8),10.811>,
         0.07
         rotate <-20, 70, 65>
         translate<-15,-7.1,-1> 
@@ -2033,7 +2048,7 @@ cylinder
     cylinder 
     {
         <0,0,10.811>,
-        <2.2*cos(120.2),2.2*sin(120.2),10.811>,
+        <2.2*cos(120.8),2.2*sin(120.8),10.811>,
         0.07
         rotate <10, 70, 35>
         translate<-36,2.1,-13> 
@@ -2269,7 +2284,7 @@ cylinder
     cylinder 
     {
         <0,0,10.811>,
-        <2.2*cos(120.2),2.2*sin(120.2),10.811>,
+        <2.2*cos(120.8),2.2*sin(120.8),10.811>,
         0.07
         rotate <10, 55, 35>
         translate<-37,4.1,-22>  
@@ -2505,7 +2520,7 @@ cylinder
     cylinder 
     {
         <0,0,10.811>,
-        <2.2*cos(120.2),2.2*sin(120.2),10.811>,
+        <2.2*cos(120.8),2.2*sin(120.8),10.811>,
         0.07
         rotate <10, 55, 35>
         translate<-34,2.1,-25>  
@@ -2741,7 +2756,7 @@ cylinder
     cylinder 
     {
         <0,0,10.811>,
-        <2.2*cos(120.2),2.2*sin(120.2),10.811>,
+        <2.2*cos(120.8),2.2*sin(120.8),10.811>,
         0.07
         rotate <0, 55, 65>
         translate<-24,-5.6,-14>  
@@ -2977,7 +2992,7 @@ cylinder
     cylinder 
     {
         <0,0,10.811>,
-        <2.2*cos(120.2),2.2*sin(120.2),10.811>,
+        <2.2*cos(120.8),2.2*sin(120.8),10.811>,
         0.07
         rotate <0, 55, 114>
         translate<15,-1,-15>  
@@ -3213,7 +3228,7 @@ cylinder
     cylinder 
     {
         <0,0,10.811>,
-        <2.2*cos(120.2),2.2*sin(120.2),10.811>,
+        <2.2*cos(120.8),2.2*sin(120.8),10.811>,
         0.07
         rotate <0, 55, 114>
         translate<18,0,-8>  
@@ -3449,7 +3464,7 @@ cylinder
     cylinder 
     {
         <0,0,10.811>,
-        <2.2*cos(120.2),2.2*sin(120.2),10.811>,
+        <2.2*cos(120.8),2.2*sin(120.8),10.811>,
         0.07
         rotate <-15, 15, 84>
         translate<7,4,-24>   
@@ -3685,7 +3700,7 @@ cylinder
     cylinder 
     {
         <0,0,10.811>,
-        <2.2*cos(120.2),2.2*sin(120.2),10.811>,
+        <2.2*cos(120.8),2.2*sin(120.8),10.811>,
         0.07
         rotate <15, 75, 164>
         translate<32,4,6>   
@@ -3920,7 +3935,7 @@ cylinder
     cylinder 
     {
         <0,0,10.811>,
-        <2.2*cos(120.2),2.2*sin(120.2),10.811>,
+        <2.2*cos(120.8),2.2*sin(120.8),10.811>,
         0.07
         rotate <15, 75, 164>
         translate<26,3,0>   
