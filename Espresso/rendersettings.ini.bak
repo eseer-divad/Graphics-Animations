@@ -1,0 +1,29 @@
+; MyAnimation.ini - Configuration for POV-Ray animation
+
+; Specify the scene file to render
+Input_File_Name=espressomachine.pov
+
+; Output settings
+Output_File_Name=EspressoMachine   ; Base name for output files, frame number will be appended
+Output_File_Type=N                    ; N for PNG, T for TGA, etc.
+Width=1920                             ; Width of the output images
+Height=1080                            ; Height of the output images
+
+; Animation settings
+Initial_Frame=0
+Final_Frame=49
+Initial_Clock=0
+Final_Clock=1
+
+; Frame rate for calculating sub-frame times (optional, useful for smooth animations)
+Sub_Frame_Rate=25
+
+; Quality settings (1-11, 9 is typically a good compromise)
+Quality=9
+
+; Antialiasing settings (optional, remove or comment out if not needed)
+Antialias=On
+Antialias_Threshold=0.3
+Antialias_Depth=3
+
+; Additional rendering options can be specified as needed

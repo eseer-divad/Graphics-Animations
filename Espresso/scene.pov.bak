@@ -1,0 +1,63 @@
+// David Reese, for Dr. Xiao's Computer Graphics, Assignment #1
+// Animation of a lever (manual) espresso machine brewing & pouring espresso into a shot glass.
+
+#include "colors.inc"
+#include "textures.inc"
+#include "screen.inc" 
+
+camera {
+    location <-4.0, 14.0, 9.0>
+    look_at <0,0,0>
+    right <-5,-5,0>
+    up <0,-2,0> 
+}
+
+light_source 
+{ 
+    <-5.0, 15.0, 25.0>,
+    color Yellow 
+}
+
+light_source 
+{ 
+    <5, 25.0, 25.0>, 
+    color Red 
+}
+
+light_source 
+{ 
+    <5, 15.0, 25.0>, 
+    color Pink 
+}
+background { color rgb <0.1,0.1,0.1> }
+
+box 
+{
+    <100,100,-1000>,
+    <-100,-100, -800>
+    
+    texture { Glass2 }
+}
+
+// arm
+cylinder 
+{
+    <18,0,0>,
+    <-30,0,0>,
+    9.5
+    rotate <2, 122, 0> 
+    
+    texture { pigment { White } }
+}
+
+
+// WristBand (Cylinder)
+cylinder 
+{
+    <-3.5,0,0>,
+    <3.5,0,0>,
+    10
+    rotate <2, 122, 0> 
+    
+    texture { pigment { Tan } }
+}

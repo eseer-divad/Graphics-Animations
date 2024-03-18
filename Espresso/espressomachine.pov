@@ -36,35 +36,7 @@ light_source
     color rgb <0,0,1>  
 }
    
-background { color rgb <0.2,0.2,0.2> } 
-
-
-// animation variables
-
-// clock (stage 1)
-Initial_Frame=0
-Final_Frame=49                                                                                      // ANIMATION ADJUSTMENT PER STAGE
-Initial_Clock=0
-Final_Clock=1
-
-// Stage 1 / S1 : pull the handle up & insert the shot glass
-#declare S1HandleStartRotate = <0, 0, 0>; 
-#declare S1HandleEndRotate = <0, 0, 0>;
-#declare S1HandleStartPosition = <0, 0, 0>; 
-#declare S1HandleEndPosition = <0, 0, 0>; 
-#declare S1ArmStartRotate = <0, 0, 0>; 
-#declare S1ArmEndRotate = <0, 0, 0>;
-#declare S1ArmStartPosition = <0, 0, 0>; 
-#declare S1ArmEndPosition = <0, 0, 0>;
-#declare S1ShotGlassStartPosition = <3, 8.7, 4>; 
-#declare S1ShotGlassEndPosition = <3, 2.7, 4>;
-
-#declare S1HandleRotate = S1HandleStartRotate + (S1HandleEndRotate - S1HandleStartRotate) * clock;
-#declare S1HandlePosition = S1HandleStartPosition + (S1HandleEndPosition - S1HandleStartPosition) * clock;
-#declare S1ArmRotate = S1ArmStartRotate + (S1ArmEndRotate - S1ArmStartRotate) * clock;
-#declare S1ArmPosition = S1ArmStartPosition + (S1ArmEndPosition - S1ArmStartPosition) * clock;
-#declare ShotGlassPosition = S1ShotGlassStartPosition + (S1ShotGlassEndPosition - S1ShotGlassStartPosition) * clock;
-
+background { color rgb <0.2,0.2,0.2> }
 
 // espresso shot glass
 
@@ -76,7 +48,7 @@ union {
             texture {
                 Glass // Use the 'glass' texture for transparency
                 finish {
-                    ambient 0.5
+                    ambient 0.1
                     diffuse 0.9
                     reflection { 0.5 }
                     specular 0.9
@@ -90,12 +62,12 @@ union {
         }
     }
     cylinder {
-        <0, 0, 0>, <0, 0, 2.5>, 0.0001
+        <0, 0, 0>, <0, 0, 2.5>, 0.1
         open
         texture {
             Glass // Use the 'glass' texture for transparency
             finish {
-                ambient 1
+                ambient 0.1
                 diffuse 0.9
                 reflection { 0.5 }
                 specular 0.9
@@ -103,7 +75,7 @@ union {
             }
         }
     }
-    translate ShotGlassPosition
+    translate <3, 2.7, 4>
     rotate <90,0,0>
     scale 4
 }
