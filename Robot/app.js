@@ -123,36 +123,71 @@ var programInfo = {
     },
 };
 
-// Set up the vertex position attribute
+// Assuming mat4 and other necessary libraries are included or available in your project
+
+// Initialize webGL settings
 webGL.bindBuffer(webGL.ARRAY_BUFFER, vertexBuffer);
 webGL.vertexAttribPointer(programInfo.attribLocations.vertexPosition, 3, webGL.FLOAT, false, 0, 0);
 webGL.enableVertexAttribArray(programInfo.attribLocations.vertexPosition);
-
-// Clear the canvas
-webGL.clearColor(0.0, 0.0, 0.0, 1.0); // Clear to black, fully opaque
+webGL.clearColor(0.0, 0.0, 0.0, 1.0); // Clear to black
 webGL.clearDepth(1.0);                // Clear everything
 webGL.enable(webGL.DEPTH_TEST);       // Enable depth testing
 webGL.depthFunc(webGL.LEQUAL);        // Near things obscure far things
 webGL.clear(webGL.COLOR_BUFFER_BIT | webGL.DEPTH_BUFFER_BIT);
 
-// Set the perspective (field of view, aspect ratio, near and far clipping planes)
+// Perspective settings
 var fieldOfView = 45 * Math.PI / 180; // in radians
 var aspect = canvas.clientWidth / canvas.clientHeight;
 var zNear = 0.1;
 var zFar = 100.0;
-var projectionMatrix = mat4.create(); // Assume mat4.create() and other mat4 methods are available
+var projectionMatrix = mat4.create();
 mat4.perspective(projectionMatrix, fieldOfView, aspect, zNear, zFar);
 
-// Set the model view matrix for rotating and translating the cube
-var modelViewMatrix = mat4.create();
-mat4.translate(modelViewMatrix, modelViewMatrix, [-0.0, -0.5, -6.0]); 
-mat4.rotate(modelViewMatrix, modelViewMatrix, Math.PI / 4, [0, 0.5, 0.0]); 
-
-// Set the shader uniforms
+// Shader uniforms
 webGL.useProgram(programInfo.program);
 webGL.uniformMatrix4fv(programInfo.uniformLocations.projectionMatrix, false, projectionMatrix);
-webGL.uniformMatrix4fv(programInfo.uniformLocations.modelViewMatrix, false, modelViewMatrix);
 
-// Draw the cube
+// Draw the chest
+var chestModelViewMatrix = mat4.create();
+mat4.translate(chestModelViewMatrix, chestModelViewMatrix, [-0.0, -0.5, -6.0]); 
+mat4.rotate(chestModelViewMatrix, chestModelViewMatrix, Math.PI / 4, [0, 0.5, 0.0]); 
+webGL.uniformMatrix4fv(programInfo.uniformLocations.modelViewMatrix, false, chestModelViewMatrix);
 webGL.bindBuffer(webGL.ELEMENT_ARRAY_BUFFER, indexBuffer);
 webGL.drawElements(webGL.TRIANGLES, 36, webGL.UNSIGNED_SHORT, 0);
+
+// Draw the head
+var headModelViewMatrix = mat4.create();
+mat4.translate(headModelViewMatrix, chestModelViewMatrix, [0.0, 1.6, 0.0]); // Position head above chest
+mat4.scale(headModelViewMatrix, headModelViewMatrix, [0.5, 0.5, 0.5]); // Scale down to make the head smaller
+webGL.uniformMatrix4fv(programInfo.uniformLocations.modelViewMatrix, false, headModelViewMatrix);
+webGL.drawElements(webGL.TRIANGLES, 36, webGL.UNSIGNED_SHORT, 0);
+
+// Draw the right arm
+var rightArmModelViewMatrix = mat4.create();
+mat4.translate(rightArmModelViewMatrix, chestModelViewMatrix, [1.5, 0.0, 0.0]); // Position right of the chest
+mat4.scale(rightArmModelViewMatrix, rightArmModelViewMatrix, [0.3, 1.0, 0.3]); // Scale to arm proportions
+webGL.uniformMatrix4fv(programInfo.uniformLocations.modelViewMatrix, false, rightArmModelViewMatrix);
+webGL.drawElements(webGL.TRIANGLES, 36, webGL.UNSIGNED_SHORT, 0);
+
+// Draw the left arm
+var leftArmModelViewMatrix = mat4.create();
+mat4.translate(leftArmModelViewMatrix, chestModelViewMatrix, [-1.5, 0.0, 0.0]); // Position left of the chest
+mat4.scale(leftArmModelViewMatrix, leftArmModelViewMatrix, [0.3, 1.0, 0.3]); // Scale to arm proportions
+// mat4.rotate(leftArmModelViewMatrix, leftArmModelViewMatrix, Math.PI / 4, [0.0, 0.1, 0.0]);
+webGL.uniformMatrix4fv(programInfo.uniformLocations.modelViewMatrix, false, leftArmModelViewMatrix);
+webGL.drawElements(webGL.TRIANGLES, 36, webGL.UNSIGNED_SHORT, 0);
+
+// Draw the right leg
+var rightLegModelViewMatrix = mat4.create();
+mat4.translate(rightLegModelViewMatrix, chestModelViewMatrix, [0.5, -2.0, 0.0]); // Position below the chest
+mat4.scale(rightLegModelViewMatrix, rightLegModelViewMatrix, [0.4, 1.5, 0.4]); // Scale to leg proportions
+webGL.uniformMatrix4fv(programInfo.uniformLocations.modelViewMatrix, false, rightLegModelViewMatrix);
+webGL.drawElements(webGL.TRIANGLES, 36, webGL.UNSIGNED_SHORT, 0);
+
+// Draw the left leg
+var leftLegModelViewMatrix = mat4.create();
+mat4.translate(leftLegModelViewMatrix, chestModelViewMatrix, [-0.5, -2.0, 0.0]); // Position below the chest
+mat4.scale(leftLegModelViewMatrix, leftLegModelViewMatrix, [0.4, 1.5, 0.4]); // Scale to leg proportions
+webGL.uniformMatrix4fv(programInfo.uniformLocations.modelViewMatrix, false, leftLegModelViewMatrix);
+webGL.drawElements(webGL.TRIANGLES, 36, webGL.UNSIGNED_SHORT, 0);
+
