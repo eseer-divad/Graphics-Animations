@@ -126,8 +126,6 @@ var programInfo = {
     },
 };
 
-// Assuming mat4 and other necessary libraries are included or available in your project
-
 // Initialize webGL settings
 webGL.bindBuffer(webGL.ARRAY_BUFFER, vertexBuffer);
 webGL.vertexAttribPointer(programInfo.attribLocations.vertexPosition, 3, webGL.FLOAT, false, 0, 0);
@@ -157,76 +155,133 @@ var armColor = [0.4, 0.4, 0.4, 1.0]; // Darker gray
 var legColor = [0.2, 0.2, 0.2, 1.0]; // Darkest gray
 var eyeColor = [0.0, 0.0, 0.0, 1.0]; // Black
 
-// Draw the chest
-var chestModelViewMatrix = mat4.create();
-mat4.translate(chestModelViewMatrix, chestModelViewMatrix, [-0.0, -0.5, -8.0]); 
-mat4.rotate(chestModelViewMatrix, chestModelViewMatrix, Math.PI / 4, [0, 0.5, 0.0]); 
-mat4.scale(chestModelViewMatrix, chestModelViewMatrix, [1.0, 1.0, 0.5]);
-webGL.uniformMatrix4fv(programInfo.uniformLocations.modelViewMatrix, false, chestModelViewMatrix);
-webGL.uniform4fv(programInfo.uniformLocations.color, chestColor);
-webGL.bindBuffer(webGL.ELEMENT_ARRAY_BUFFER, indexBuffer);
-webGL.drawElements(webGL.TRIANGLES, 36, webGL.UNSIGNED_SHORT, 0);
+// Animation variables
+var isJumping = false;
+var isSpinning = false;
+var jumpHeight = 0.0;
+var chestJumpHeight = 0.0;
+var spinAngle = 0.0;
 
-// Draw the head
-var headModelViewMatrix = mat4.create();
-mat4.translate(headModelViewMatrix, chestModelViewMatrix, [0.0, 1.6, 0.0]); // Position head above chest
-mat4.scale(headModelViewMatrix, headModelViewMatrix, [0.8, 0.8, 0.8]); // Scale down to make the head smaller
-webGL.uniformMatrix4fv(programInfo.uniformLocations.modelViewMatrix, false, headModelViewMatrix);
-webGL.uniform4fv(programInfo.uniformLocations.color, headColor);
-webGL.drawElements(webGL.TRIANGLES, 36, webGL.UNSIGNED_SHORT, 0);
+// Animation loop
+function animateScene() {
+  // Clear the canvas
+  webGL.clear(webGL.COLOR_BUFFER_BIT | webGL.DEPTH_BUFFER_BIT);
 
-// Eye dimensions and positions
-var eyeScale = [0.1, 0.1, 0.1]; // Small scale for the eyes
-var rightEyePosition = [0.3, 0.3, 1]; // Adjust this to position the right eye correctly
-var leftEyePosition = [-0.2, 0.3, 1]; // Adjust this to position the left eye correctly
+  // Update jump animation
+  if (isJumping) {
+    jumpHeight = Math.abs(Math.sin(Date.now() * 0.005)) * 0.5;
+    chestJumpHeight = Math.abs(Math.sin(Date.now() * 0.005)) * 3;
+  } else {
+    jumpHeight = 0.0;
+    chestJumpHeight = 0.0;
+  }
 
-// Draw the right eye
-var rightEyeModelViewMatrix = mat4.create();
-mat4.translate(rightEyeModelViewMatrix, headModelViewMatrix, rightEyePosition); // Position relative to the head
-mat4.scale(rightEyeModelViewMatrix, rightEyeModelViewMatrix, eyeScale); // Scale down to eye size
-webGL.uniformMatrix4fv(programInfo.uniformLocations.modelViewMatrix, false, rightEyeModelViewMatrix);
-webGL.uniform4fv(programInfo.uniformLocations.color, eyeColor);
-webGL.drawElements(webGL.TRIANGLES, 36, webGL.UNSIGNED_SHORT, 0);
+  // Update spin animation
+  if (isSpinning) {
+    spinAngle += 0.05; // Adjust the spin speed as needed
+  }
 
-// Draw the left eye
-var leftEyeModelViewMatrix = mat4.create();
-mat4.translate(leftEyeModelViewMatrix, headModelViewMatrix, leftEyePosition); // Position relative to the head
-mat4.scale(leftEyeModelViewMatrix, leftEyeModelViewMatrix, eyeScale); // Scale down to eye size
-webGL.uniformMatrix4fv(programInfo.uniformLocations.modelViewMatrix, false, leftEyeModelViewMatrix);
-webGL.uniform4fv(programInfo.uniformLocations.color, eyeColor);
-webGL.drawElements(webGL.TRIANGLES, 36, webGL.UNSIGNED_SHORT, 0);
+  // Draw the robot parts with updated transformations
 
-// Draw the right arm
-var rightArmModelViewMatrix = mat4.create();
-mat4.translate(rightArmModelViewMatrix, chestModelViewMatrix, [1.5, 0.0, 0.0]); // Position right of the chest
-mat4.scale(rightArmModelViewMatrix, rightArmModelViewMatrix, [0.3, 1.0, 0.6]); // Scale to arm proportions
-webGL.uniformMatrix4fv(programInfo.uniformLocations.modelViewMatrix, false, rightArmModelViewMatrix);
-webGL.uniform4fv(programInfo.uniformLocations.color, armColor);
-webGL.drawElements(webGL.TRIANGLES, 36, webGL.UNSIGNED_SHORT, 0);
+  // Draw the chest
+  var chestModelViewMatrix = mat4.create();
+  mat4.translate(chestModelViewMatrix, chestModelViewMatrix, [-0.0, -0.5 + chestJumpHeight, -8.0]); 
+  mat4.rotate(chestModelViewMatrix, chestModelViewMatrix, spinAngle, [0, 1.0, 0.0]); 
+  mat4.scale(chestModelViewMatrix, chestModelViewMatrix, [1.0, 1.0, 0.5]);
+  webGL.uniformMatrix4fv(programInfo.uniformLocations.modelViewMatrix, false, chestModelViewMatrix);
+  webGL.uniform4fv(programInfo.uniformLocations.color, chestColor);
+  webGL.bindBuffer(webGL.ELEMENT_ARRAY_BUFFER, indexBuffer);
+  webGL.drawElements(webGL.TRIANGLES, 36, webGL.UNSIGNED_SHORT, 0);
 
-// Draw the left arm
-var leftArmModelViewMatrix = mat4.create();
-mat4.translate(leftArmModelViewMatrix, chestModelViewMatrix, [-1.5, 0.0, 0.0]); // Position left of the chest
-mat4.scale(leftArmModelViewMatrix, leftArmModelViewMatrix, [0.3, 1.0, 0.6]); // Scale to arm proportions
-// mat4.rotate(leftArmModelViewMatrix, leftArmModelViewMatrix, Math.PI / 4, [0.0, 0.1, 0.0]);
-webGL.uniformMatrix4fv(programInfo.uniformLocations.modelViewMatrix, false, leftArmModelViewMatrix);
-webGL.uniform4fv(programInfo.uniformLocations.color, armColor);
-webGL.drawElements(webGL.TRIANGLES, 36, webGL.UNSIGNED_SHORT, 0);
+  // Draw the head
+  var headModelViewMatrix = mat4.create();
+  mat4.translate(headModelViewMatrix, chestModelViewMatrix, [0.0, 1.6 + jumpHeight, 0.0]); // Position head above chest
+  mat4.rotate(headModelViewMatrix, headModelViewMatrix, 0, [0, 1.0, 0.0]); // Rotate head with the spin
+  mat4.scale(headModelViewMatrix, headModelViewMatrix, [0.8, 0.8, 0.8]); // Scale down to make the head smaller
+  webGL.uniformMatrix4fv(programInfo.uniformLocations.modelViewMatrix, false, headModelViewMatrix);
+  webGL.uniform4fv(programInfo.uniformLocations.color, headColor);
+  webGL.drawElements(webGL.TRIANGLES, 36, webGL.UNSIGNED_SHORT, 0);
 
-// Draw the right leg
-var rightLegModelViewMatrix = mat4.create();
-mat4.translate(rightLegModelViewMatrix, chestModelViewMatrix, [0.5, -2.0, 0.48]); // Position below the chest
-mat4.scale(rightLegModelViewMatrix, rightLegModelViewMatrix, [0.4, 1.5, 0.4]); // Scale to leg proportions
-mat4.rotate(rightLegModelViewMatrix, rightLegModelViewMatrix, -1.7, [2, 1, 0]);
-webGL.uniformMatrix4fv(programInfo.uniformLocations.modelViewMatrix, false, rightLegModelViewMatrix);
-webGL.uniform4fv(programInfo.uniformLocations.color, legColor);
-webGL.drawElements(webGL.TRIANGLES, 36, webGL.UNSIGNED_SHORT, 0);
+  // Eye dimensions and positions
+  var eyeScale = [0.1, 0.1, 0.1]; // Small scale for the eyes
+  var rightEyePosition = [0.3, 0.3 + jumpHeight, 1]; // Adjust this to position the right eye correctly
+  var leftEyePosition = [-0.2, 0.3 + jumpHeight, 1]; // Adjust this to position the left eye correctly
 
-// Draw the left leg
-var leftLegModelViewMatrix = mat4.create();
-mat4.translate(leftLegModelViewMatrix, chestModelViewMatrix, [-0.3, -3.0, -0.48]); // Position below the chest
-mat4.scale(leftLegModelViewMatrix, leftLegModelViewMatrix, [0.4, 1.5, 0.4]); // Scale to leg proportions
-mat4.rotate(leftLegModelViewMatrix, leftLegModelViewMatrix, -0.7, [-2, 1, 0]);
-webGL.uniformMatrix4fv(programInfo.uniformLocations.modelViewMatrix, false, leftLegModelViewMatrix);
-webGL.uniform4fv(programInfo.uniformLocations.color, legColor);
-webGL.drawElements(webGL.TRIANGLES, 36, webGL.UNSIGNED_SHORT, 0);
+  // Draw the right eye
+  var rightEyeModelViewMatrix = mat4.create();
+  mat4.translate(rightEyeModelViewMatrix, headModelViewMatrix, rightEyePosition); // Position relative to the head
+  mat4.rotate(rightEyeModelViewMatrix, rightEyeModelViewMatrix, spinAngle, [0, 1.0, 0.0]); // Rotate the eye with the spin
+  mat4.scale(rightEyeModelViewMatrix, rightEyeModelViewMatrix, eyeScale); // Scale down to eye size
+  webGL.uniformMatrix4fv(programInfo.uniformLocations.modelViewMatrix, false, rightEyeModelViewMatrix);
+  webGL.uniform4fv(programInfo.uniformLocations.color, eyeColor);
+  webGL.drawElements(webGL.TRIANGLES, 36, webGL.UNSIGNED_SHORT, 0);
+
+  // Draw the left eye
+  var leftEyeModelViewMatrix = mat4.create();
+  mat4.translate(leftEyeModelViewMatrix, headModelViewMatrix, leftEyePosition); // Position relative to the head
+  mat4.rotate(leftEyeModelViewMatrix, leftEyeModelViewMatrix, spinAngle, [0, 1.0, 0.0]); // Rotate the eye with the spin
+  mat4.scale(leftEyeModelViewMatrix, leftEyeModelViewMatrix, eyeScale); // Scale down to eye size
+  webGL.uniformMatrix4fv(programInfo.uniformLocations.modelViewMatrix, false, leftEyeModelViewMatrix);
+  webGL.uniform4fv(programInfo.uniformLocations.color, eyeColor);
+  webGL.drawElements(webGL.TRIANGLES, 36, webGL.UNSIGNED_SHORT, 0);
+
+    // Draw the right arm
+    var rightArmModelViewMatrix = mat4.create();
+    mat4.translate(rightArmModelViewMatrix, chestModelViewMatrix, [1.3, 0.0 + jumpHeight, 0.0]); // Position right of the chest
+    mat4.rotate(rightArmModelViewMatrix, rightArmModelViewMatrix, 0.3, [0, 0.0, 0.01]); // Rotate the arm with the spin
+    mat4.scale(rightArmModelViewMatrix, rightArmModelViewMatrix, [0.3, 1.0, 0.6]); // Scale to arm proportions
+    webGL.uniformMatrix4fv(programInfo.uniformLocations.modelViewMatrix, false, rightArmModelViewMatrix);
+    webGL.uniform4fv(programInfo.uniformLocations.color, armColor);
+    webGL.drawElements(webGL.TRIANGLES, 36, webGL.UNSIGNED_SHORT, 0);
+
+    // Draw the left arm
+    var leftArmModelViewMatrix = mat4.create();
+    mat4.translate(leftArmModelViewMatrix, chestModelViewMatrix, [-1.3, 0.0 + jumpHeight, 0.0]); // Position left of the chest
+    mat4.rotate(leftArmModelViewMatrix, leftArmModelViewMatrix, 0.3, [0, 0, -0.01]); // Rotate the arm with the spin
+    mat4.scale(leftArmModelViewMatrix, leftArmModelViewMatrix, [0.3, 1.0, 0.8]); // Scale to arm proportions
+    webGL.uniformMatrix4fv(programInfo.uniformLocations.modelViewMatrix, false, leftArmModelViewMatrix);
+    webGL.uniform4fv(programInfo.uniformLocations.color, armColor);
+    webGL.drawElements(webGL.TRIANGLES, 36, webGL.UNSIGNED_SHORT, 0);
+
+    // Draw the right leg
+    var rightLegModelViewMatrix = mat4.create();
+    mat4.translate(rightLegModelViewMatrix, chestModelViewMatrix, [0.7, -2.0 + jumpHeight, 0.18]); // Position below the chest
+    mat4.rotate(rightLegModelViewMatrix, rightLegModelViewMatrix, 0.2, [-3, -1, 1]); // Rotate the leg with the spin
+    mat4.scale(rightLegModelViewMatrix, rightLegModelViewMatrix, [0.3, 2.0, 0.5]); // Scale to leg proportions
+    webGL.uniformMatrix4fv(programInfo.uniformLocations.modelViewMatrix, false, rightLegModelViewMatrix);
+    webGL.uniform4fv(programInfo.uniformLocations.color, legColor);
+    webGL.drawElements(webGL.TRIANGLES, 36, webGL.UNSIGNED_SHORT, 0);
+
+    // Draw the left leg
+    var leftLegModelViewMatrix = mat4.create();
+    mat4.translate(leftLegModelViewMatrix, chestModelViewMatrix, [-0.7, -2.0 + jumpHeight, 0.18]); // Position below the chest
+    mat4.rotate(leftLegModelViewMatrix, leftLegModelViewMatrix, 0.2, [-3, 1, -1]); // Rotate the leg with the spin
+    mat4.scale(leftLegModelViewMatrix, leftLegModelViewMatrix, [0.3, 2.0, 0.5]); // Scale to leg proportions
+    webGL.uniformMatrix4fv(programInfo.uniformLocations.modelViewMatrix, false, leftLegModelViewMatrix);
+    webGL.uniform4fv(programInfo.uniformLocations.color, legColor);
+    webGL.drawElements(webGL.TRIANGLES, 36, webGL.UNSIGNED_SHORT, 0);
+
+  // Request the next animation frame
+  requestAnimationFrame(animateScene);
+}
+
+// Toggle animation based on menu selection or key command
+function toggleAnimation(animation) {
+  if (animation === 'jump') {
+    isJumping = !isJumping;
+  } else if (animation === 'spin') {
+    isSpinning = !isSpinning;
+  }
+}
+
+// Keyboard event listener
+document.addEventListener('keydown', function(event) {
+  if (event.key === 'j') {
+    toggleAnimation('jump');
+  } else if (event.key === 's') {
+    toggleAnimation('spin');
+  }
+});
+
+// Start the animation loop
+animateScene();
